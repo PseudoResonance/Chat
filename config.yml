@@ -1,0 +1,30 @@
+#############
+#Chat Config#
+#############
+
+#DO NOT CHANGE THIS LINE! YOUR CONFIG WILL BE RESET UPON LOADING IF THIS LINE IS EDITED!
+Version: 3
+
+#If set to false, local chat is forced and /global is enabled for the price below.
+Global: true
+Price: 5000
+
+#If set to true, staff channel is enabled. Use the chat.staff permission to allow access to it.
+Staff: true
+
+#The range of local chat.
+Range: 128
+
+#The MESSAGE sent out when a PLAYER first joins.
+FirstJoinMessage: "&3Chat> &aWelcome &r%PLAYER% &ato the server!"
+
+#Chat channel formats.
+GlobalFormat: "&cG%ARROW%%PREFIX%%ARROW%%PLAYER%%ARROW%&%SUFFIX%%MESSAGE%"
+LocalFormat: "&eL%ARROW%%PREFIX%%ARROW%%PLAYER%%ARROW%&%SUFFIX%%MESSAGE%"
+StaffFormat: "&bS%ARROW%%PREFIX%%ARROW%%PLAYER%%ARROW%&%SUFFIX%%MESSAGE%"
+MsgFormatTo: "&dPM To %PLAYER%%ARROW%&%SUFFIX%%MESSAGE%"
+MsgFormatFrom: "&dPM From %PLAYER%%ARROW%&%SUFFIX%%MESSAGE%"
+
+#Join or Leave Messages.
+JoinMessage: "&a&lJoin&e&l> &f%PLAYER% &ehas joined the server!"
+LeaveMessage: "&c&lLeave&e&l> &f%PLAYER% &ehas left the server!"
