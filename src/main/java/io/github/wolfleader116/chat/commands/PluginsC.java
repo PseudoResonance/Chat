@@ -18,7 +18,7 @@ public class PluginsC implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("pl")) {
 			if (!(sender instanceof Player)) {
 				String pluginlist = "";
-				int pluginsfound = 1;
+				int pluginsfound = 0;
 				Plugin[] plugins = Bukkit.getServer().getPluginManager().getPlugins();
 				for(int i = 0; i < plugins.length; i++) {
 					if (plugins[i].getClass().getCanonicalName().startsWith("io.github.wolfleader116")) {
@@ -42,11 +42,11 @@ public class PluginsC implements CommandExecutor {
 						}
 					}
 				}
-				log.info("Please note that all of these plugins are privately developed, but are open source at WolfLeader116's GitHub. Read the license before using!");
 				log.info("Plugins (" + pluginsfound + "): " + pluginlist);
+				log.info("Please note that all of these plugins are privately developed, but are open source at WolfLeader116's GitHub. Read the license before using!");
 			} else {
 				String pluginlist = "";
-				int pluginsfound = 1;
+				int pluginsfound = 0;
 				Plugin[] plugins = Bukkit.getServer().getPluginManager().getPlugins();
 				for(int i = 0; i < plugins.length; i++) {
 					if (plugins[i].getClass().getCanonicalName().startsWith("io.github.wolfleader116")) {
@@ -56,7 +56,7 @@ public class PluginsC implements CommandExecutor {
 							if (pluginlist == "") {
 								add = ChatColor.GREEN + plugins[i].getName();
 							} else {
-								add = ChatColor.RESET + ", " + plugins[i].getName();
+								add = ChatColor.RESET + ", " + ChatColor.GREEN + plugins[i].getName();
 							}
 							pluginlist = pluginlist + add;
 						} else {

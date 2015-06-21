@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.logging.Logger;
 
 import io.github.wolfleader116.chat.ChatPlugin;
+import io.github.wolfleader116.wolfapi.WolfAPI;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -42,9 +43,12 @@ public class ChatC implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("reload")) {
 						ChatPlugin.plugin.reloadConfig();
 						log.info("Reloaded the config!");
+					} else {
+						log.info("Unknown subcommand! Use /chat help for subcommands.");
 					}
 				}
 			} else {
+				Player p = (Player) sender;
 				if (args.length == 0) {
 					sender.sendMessage(ChatColor.DARK_AQUA + "===---" + ChatColor.GOLD + "Chat Info" + ChatColor.DARK_AQUA + "---===");
 					sender.sendMessage(ChatColor.AQUA + "Chat plugin created by WolfLeader116");
@@ -85,10 +89,12 @@ public class ChatC implements CommandExecutor {
 						configFile.delete();
 						ChatPlugin.plugin.saveDefaultConfig();
 						ChatPlugin.plugin.reloadConfig();
-						sender.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "Reset the config!");
+						WolfAPI.message("Reset the config!", p, "Chat");
 					} else if (args[0].equalsIgnoreCase("reload")) {
 						ChatPlugin.plugin.reloadConfig();
-						sender.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "Reloaded the config!");
+						WolfAPI.message("Reloaded the config!", p, "Chat");
+					} else {
+						WolfAPI.message("Unknown subcommand! Use /chat help for subcommands.", p, "Chat");
 					}
 				}
 			}

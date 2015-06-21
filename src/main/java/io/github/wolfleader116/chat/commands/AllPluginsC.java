@@ -18,7 +18,7 @@ public class AllPluginsC implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("allpl")) {
 			if (!(sender instanceof Player)) {
 				String pluginlist = "";
-				int pluginsfound = 1;
+				int pluginsfound = 0;
 				Plugin[] plugins = Bukkit.getServer().getPluginManager().getPlugins();
 				for(int i = 0; i < plugins.length; i++) {
 					pluginsfound = pluginsfound + 1;
@@ -44,7 +44,7 @@ public class AllPluginsC implements CommandExecutor {
 			} else {
 				if (sender.hasPermission("chat.allpl")) {
 					String pluginlist = "";
-					int pluginsfound = 1;
+					int pluginsfound = 0;
 					Plugin[] plugins = Bukkit.getServer().getPluginManager().getPlugins();
 					for(int i = 0; i < plugins.length; i++) {
 						pluginsfound = pluginsfound + 1;
@@ -53,7 +53,7 @@ public class AllPluginsC implements CommandExecutor {
 							if (pluginlist == "") {
 								add = ChatColor.GREEN + plugins[i].getName();
 							} else {
-								add = ChatColor.RESET + ", " + plugins[i].getName();
+								add = ChatColor.RESET + ", " + ChatColor.GREEN + plugins[i].getName();
 							}
 							pluginlist = pluginlist + add;
 						} else {

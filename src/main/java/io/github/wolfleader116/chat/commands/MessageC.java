@@ -4,6 +4,8 @@ import java.util.logging.Logger;
 
 import io.github.wolfleader116.chat.ChatPlugin;
 import io.github.wolfleader116.chat.Config;
+import io.github.wolfleader116.wolfapi.Errors;
+import io.github.wolfleader116.wolfapi.WolfAPI;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -41,7 +43,7 @@ public class MessageC implements CommandExecutor {
 						if (Bukkit.getServer().getPluginManager().getPlugin("Settings") != null) {
 							Config settings = new Config("../Settings/playerdata", ChatPlugin.plugin);
 							if (settings.getConfig().getBoolean("afk." + rec.getUniqueId().toString())) {
-								sender.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "That player is afk so they may not see your message!");
+								log.info("That player is afk so they may not see your message!");
 							}
 						}
 						String splayer = ChatColor.RESET + "Console" + ChatColor.RESET;
@@ -84,21 +86,25 @@ public class MessageC implements CommandExecutor {
 			if (cmd.getName().equalsIgnoreCase("msg")) {
 				if (args.length == 0) {
 					if (c.getConfig().getString("reply." + player.getUniqueId().toString()) == null) {
-						sender.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "You have nobody to reply to!");
+						WolfAPI.message("You have nobody to reply to!", player, "Chat");
 					} else {
 						c.getConfig().set("channel." + player.getUniqueId().toString(), 2);
 						c.save();
-						sender.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "Now in message chat mode!");
+						WolfAPI.message("Now in message chat mode!", player, "Chat");
 					}
 				} else if (args.length == 1) {
-					Player rec = Bukkit.getPlayer(args[0]);
-					c.getConfig().set("reply." + player.getUniqueId().toString(), rec.getName());
-					c.getConfig().set("channel." + player.getUniqueId().toString(), 2);
-					c.save();
-					sender.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "Now in message chat mode!");
+					if (Bukkit.getPlayer(args[0]) != null) {
+						Player rec = Bukkit.getPlayer(args[0]);
+						c.getConfig().set("reply." + player.getUniqueId().toString(), rec.getName());
+						c.getConfig().set("channel." + player.getUniqueId().toString(), 2);
+						c.save();
+						WolfAPI.message("Now in message chat mode!", player, "Chat");
+					} else {
+						Errors.sendError(Errors.NOT_ONLINE, player, "Chat");
+					}
 				} else if (args.length >= 2) {
 					if (Bukkit.getPlayer(args[0]) == null) {
-						sender.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "That player is offline!");
+						Errors.sendError(Errors.NOT_ONLINE, player, "Chat");
 					} else {
 						Player rec = Bukkit.getPlayer(args[0]);
 						String message = "";
@@ -118,7 +124,7 @@ public class MessageC implements CommandExecutor {
 						if (Bukkit.getServer().getPluginManager().getPlugin("Settings") != null) {
 							Config settings = new Config("../Settings/playerdata", ChatPlugin.plugin);
 							if (settings.getConfig().getBoolean("afk." + rec.getUniqueId().toString())) {
-								sender.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "That player is afk so they may not see your message!");
+								WolfAPI.message("That player is afk so they may not see your message!", player, "Chat");
 							}
 						}
 						if (c.getConfig().getString("nick." + player.getUniqueId().toString()) == null) {
