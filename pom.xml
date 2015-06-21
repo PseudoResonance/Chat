@@ -2,8 +2,24 @@
   	<modelVersion>4.0.0</modelVersion>
   	<groupId>com.github.WolfLeader116</groupId>
   	<artifactId>Chat</artifactId>
-  	<version>3.0</version>
+  	<version>3.0.1-SNAPSHOT</version>
+  	<properties>
+  		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  	</properties>
 	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<resources>
+			<resource>
+				<targetPath>.</targetPath>
+				<filtering>true</filtering>
+				<directory>${basedir}/src/main/resources/</directory>
+				<includes>
+					<include>plugin.yml</include>
+					<include>LICENSE</include>
+					<include>config.yml</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
