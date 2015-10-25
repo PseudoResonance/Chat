@@ -111,6 +111,13 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		Config co = new Config("playerdata", ChatPlugin.plugin);
+		if ((co.getConfig().getInt("channel." + e.getPlayer().getUniqueId().toString()) != 0) && (co.getConfig().getInt("channel." + e.getPlayer().getUniqueId().toString()) != 1) && (co.getConfig().getInt("channel." + e.getPlayer().getUniqueId().toString()) != 2) && (co.getConfig().getInt("channel." + e.getPlayer().getUniqueId().toString()) != 3)) {
+			if (this.getConfig().getBoolean("Global")) {
+				co.getConfig().set("channel." + e.getPlayer().getUniqueId().toString(), 0);
+			} else {
+				co.getConfig().set("channel." + e.getPlayer().getUniqueId().toString(), 1);
+			}
+		}
 		if (!(co.getConfig().getBoolean("join." + e.getPlayer().getUniqueId().toString()))) {
 			co.getConfig().set("join." + e.getPlayer().getUniqueId().toString(), true);
 			co.save();
