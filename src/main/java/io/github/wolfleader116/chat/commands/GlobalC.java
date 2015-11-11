@@ -1,11 +1,17 @@
 package io.github.wolfleader116.chat.commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 import io.github.wolfleader116.chat.ChatPlugin;
 import io.github.wolfleader116.chat.Config;
+import io.github.wolfleader116.wolfapi.ChatComponent;
+import io.github.wolfleader116.wolfapi.ChatElement;
+import io.github.wolfleader116.wolfapi.ComponentType;
+import io.github.wolfleader116.wolfapi.Message;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -50,8 +56,16 @@ public class GlobalC implements CommandExecutor {
 							format = format.replaceAll("%SUFFIX%", suffix);
 							format = format.replaceAll("%MESSAGE%", message);
 							format = format.replaceAll("&", "§");
-							format = format.replaceAll("%PLAYER%", splayer);
-							Bukkit.getServer().broadcastMessage(format);
+							List<ChatElement> joinchats = new ArrayList<ChatElement>();
+							for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+								joinchats.add(new ChatElement(join));
+							}
+							ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + splayer), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+							for (int i = 1; i < joinchats.size(); i++) {
+								joinchats.add(i, elem);
+								i++;
+							}
+							Message.broadcastJSONMessage(joinchats);
 						} else {
 							String format = ChatPlugin.plugin.getConfig().getString("GlobalFormat");
 							format = format.replaceAll("%ARROW%", arrow);
@@ -59,8 +73,16 @@ public class GlobalC implements CommandExecutor {
 							format = format.replaceAll("%SUFFIX%", suffix);
 							format = format.replaceAll("%MESSAGE%", message);
 							format = format.replaceAll("&", "§");
-							format = format.replaceAll("%PLAYER%", displayname);
-							Bukkit.getServer().broadcastMessage(format);
+							List<ChatElement> joinchats = new ArrayList<ChatElement>();
+							for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+								joinchats.add(new ChatElement(join));
+							}
+							ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + splayer), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+							for (int i = 1; i < joinchats.size(); i++) {
+								joinchats.add(i, elem);
+								i++;
+							}
+							Message.broadcastJSONMessage(joinchats);
 						}
 					}
 				} else {
@@ -92,8 +114,16 @@ public class GlobalC implements CommandExecutor {
 										format = format.replaceAll("%SUFFIX%", suffix);
 										format = format.replaceAll("%MESSAGE%", message);
 										format = format.replaceAll("&", "§");
-										format = format.replaceAll("%PLAYER%", splayer);
-										Bukkit.getServer().broadcastMessage(format);
+										List<ChatElement> joinchats = new ArrayList<ChatElement>();
+										for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+											joinchats.add(new ChatElement(join));
+										}
+										ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + splayer), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+										for (int i = 1; i < joinchats.size(); i++) {
+											joinchats.add(i, elem);
+											i++;
+										}
+										Message.broadcastJSONMessage(joinchats);
 									} else {
 										String format = ChatPlugin.plugin.getConfig().getString("GlobalFormat");
 										format = format.replaceAll("%ARROW%", arrow);
@@ -101,8 +131,16 @@ public class GlobalC implements CommandExecutor {
 										format = format.replaceAll("%SUFFIX%", suffix);
 										format = format.replaceAll("%MESSAGE%", message);
 										format = format.replaceAll("&", "§");
-										format = format.replaceAll("%PLAYER%", displayname);
-										Bukkit.getServer().broadcastMessage(format);
+										List<ChatElement> joinchats = new ArrayList<ChatElement>();
+										for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+											joinchats.add(new ChatElement(join));
+										}
+										ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + splayer), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+										for (int i = 1; i < joinchats.size(); i++) {
+											joinchats.add(i, elem);
+											i++;
+										}
+										Message.broadcastJSONMessage(joinchats);
 									}
 									ChatPlugin.economy.withdrawPlayer(player, ChatPlugin.plugin.getConfig().getInt("Price"));
 								}
@@ -128,8 +166,16 @@ public class GlobalC implements CommandExecutor {
 									format = format.replaceAll("%SUFFIX%", suffix);
 									format = format.replaceAll("%MESSAGE%", message);
 									format = format.replaceAll("&", "§");
-									format = format.replaceAll("%PLAYER%", splayer);
-									Bukkit.getServer().broadcastMessage(format);
+									List<ChatElement> joinchats = new ArrayList<ChatElement>();
+									for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+										joinchats.add(new ChatElement(join));
+									}
+									ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + splayer), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+									for (int i = 1; i < joinchats.size(); i++) {
+										joinchats.add(i, elem);
+										i++;
+									}
+									Message.broadcastJSONMessage(joinchats);
 								} else {
 									String format = ChatPlugin.plugin.getConfig().getString("GlobalFormat");
 									format = format.replaceAll("%ARROW%", arrow);
@@ -137,8 +183,16 @@ public class GlobalC implements CommandExecutor {
 									format = format.replaceAll("%SUFFIX%", suffix);
 									format = format.replaceAll("%MESSAGE%", message);
 									format = format.replaceAll("&", "§");
-									format = format.replaceAll("%PLAYER%", displayname);
-									Bukkit.getServer().broadcastMessage(format);
+									List<ChatElement> joinchats = new ArrayList<ChatElement>();
+									for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+										joinchats.add(new ChatElement(join));
+									}
+									ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + splayer), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+									for (int i = 1; i < joinchats.size(); i++) {
+										joinchats.add(i, elem);
+										i++;
+									}
+									Message.broadcastJSONMessage(joinchats);
 								}
 							}
 						}

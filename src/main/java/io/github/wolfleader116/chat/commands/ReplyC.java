@@ -1,9 +1,16 @@
 package io.github.wolfleader116.chat.commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 import io.github.wolfleader116.chat.ChatPlugin;
 import io.github.wolfleader116.chat.Config;
+import io.github.wolfleader116.wolfapi.ChatComponent;
+import io.github.wolfleader116.wolfapi.ChatElement;
+import io.github.wolfleader116.wolfapi.ComponentType;
+import io.github.wolfleader116.wolfapi.Message;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -51,8 +58,16 @@ public class ReplyC implements CommandExecutor {
 						format = format.replaceAll("%SUFFIX%", "c");
 						format = format.replaceAll("%MESSAGE%", message);
 						format = format.replaceAll("&", "§");
-						format = format.replaceAll("%PLAYER%", splayer);
-						rec.sendMessage(format);
+						List<ChatElement> joinchats = new ArrayList<ChatElement>();
+						for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+							joinchats.add(new ChatElement(join));
+						}
+						ChatElement elem = new ChatElement(splayer);
+						for (int i = 1; i < joinchats.size(); i++) {
+							joinchats.add(i, elem);
+							i++;
+						}
+						Message.sendJSONMessage(rec, joinchats);
 						if (c.getConfig().getString("nick." + rec.getUniqueId().toString()) == null) {
 							String srec = ChatColor.RESET + rec.getName() + ChatColor.RESET;
 							String formats = ChatPlugin.plugin.getConfig().getString("MsgFormatTo");
@@ -123,8 +138,16 @@ public class ReplyC implements CommandExecutor {
 							format = format.replaceAll("%SUFFIX%", suffix);
 							format = format.replaceAll("%MESSAGE%", message);
 							format = format.replaceAll("&", "§");
-							format = format.replaceAll("%PLAYER%", splayer);
-							rec.sendMessage(format);
+							List<ChatElement> joinchats = new ArrayList<ChatElement>();
+							for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+								joinchats.add(new ChatElement(join));
+							}
+							ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + player.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+							for (int i = 1; i < joinchats.size(); i++) {
+								joinchats.add(i, elem);
+								i++;
+							}
+							Message.sendJSONMessage(rec, joinchats);
 						} else {
 							String splayer = ChatColor.RESET + c.getConfig().getString("nick." + player.getUniqueId().toString()) + ChatColor.RESET;
 							String format = ChatPlugin.plugin.getConfig().getString("MsgFormatFrom");
@@ -133,8 +156,16 @@ public class ReplyC implements CommandExecutor {
 							format = format.replaceAll("%SUFFIX%", suffix);
 							format = format.replaceAll("%MESSAGE%", message);
 							format = format.replaceAll("&", "§");
-							format = format.replaceAll("%PLAYER%", splayer);
-							rec.sendMessage(format);
+							List<ChatElement> joinchats = new ArrayList<ChatElement>();
+							for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+								joinchats.add(new ChatElement(join));
+							}
+							ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + player.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+							for (int i = 1; i < joinchats.size(); i++) {
+								joinchats.add(i, elem);
+								i++;
+							}
+							Message.sendJSONMessage(rec, joinchats);
 						}
 						if (c.getConfig().getString("nick." + rec.getUniqueId().toString()) == null) {
 							String srec = ChatColor.RESET + rec.getName() + ChatColor.RESET;
@@ -144,8 +175,16 @@ public class ReplyC implements CommandExecutor {
 							format = format.replaceAll("%SUFFIX%", suffix);
 							format = format.replaceAll("%MESSAGE%", message);
 							format = format.replaceAll("&", "§");
-							format = format.replaceAll("%PLAYER%", srec);
-							sender.sendMessage(format);
+							List<ChatElement> joinchats = new ArrayList<ChatElement>();
+							for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+								joinchats.add(new ChatElement(join));
+							}
+							ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+							for (int i = 1; i < joinchats.size(); i++) {
+								joinchats.add(i, elem);
+								i++;
+							}
+							Message.sendJSONMessage((Player) sender, joinchats);
 						} else {
 							String srec = ChatColor.RESET + c.getConfig().getString("nick." + rec.getUniqueId().toString()) + ChatColor.RESET;
 							String format = ChatPlugin.plugin.getConfig().getString("MsgFormatTo");
@@ -154,8 +193,16 @@ public class ReplyC implements CommandExecutor {
 							format = format.replaceAll("%SUFFIX%", suffix);
 							format = format.replaceAll("%MESSAGE%", message);
 							format = format.replaceAll("&", "§");
-							format = format.replaceAll("%PLAYER%", srec);
-							sender.sendMessage(format);
+							List<ChatElement> joinchats = new ArrayList<ChatElement>();
+							for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+								joinchats.add(new ChatElement(join));
+							}
+							ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+							for (int i = 1; i < joinchats.size(); i++) {
+								joinchats.add(i, elem);
+								i++;
+							}
+							Message.sendJSONMessage((Player) sender, joinchats);
 						}
 					}
 				}

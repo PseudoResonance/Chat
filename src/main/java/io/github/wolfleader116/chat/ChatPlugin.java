@@ -296,8 +296,17 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 					format = format.replaceAll("%SUFFIX%", suffix);
 					format = format.replaceAll("%MESSAGE%", message);
 					format = format.replaceAll("&", "§");
-					format = format.replaceAll("%PLAYER%", player);
-					e.setFormat(format);
+					List<ChatElement> joinchats = new ArrayList<ChatElement>();
+					for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+						joinchats.add(new ChatElement(join));
+					}
+					ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+					for (int i = 1; i < joinchats.size(); i++) {
+						joinchats.add(i, elem);
+						i++;
+					}
+					Message.broadcastJSONMessage(joinchats);
+					e.setCancelled(true);
 				} else {
 					String format = this.getConfig().getString("GlobalFormat");
 					format = format.replaceAll("%ARROW%", arrow);
@@ -305,8 +314,17 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 					format = format.replaceAll("%SUFFIX%", suffix);
 					format = format.replaceAll("%MESSAGE%", message);
 					format = format.replaceAll("&", "§");
-					format = format.replaceAll("%PLAYER%", displayname);
-					e.setFormat(format);
+					List<ChatElement> joinchats = new ArrayList<ChatElement>();
+					for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+						joinchats.add(new ChatElement(join));
+					}
+					ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+					for (int i = 1; i < joinchats.size(); i++) {
+						joinchats.add(i, elem);
+						i++;
+					}
+					Message.broadcastJSONMessage(joinchats);
+					e.setCancelled(true);
 				}
 			} else if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 1) {
 				for (Player rec : Bukkit.getOnlinePlayers()) {
@@ -319,8 +337,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 								format = format.replaceAll("%SUFFIX%", suffix);
 								format = format.replaceAll("%MESSAGE%", message);
 								format = format.replaceAll("&", "§");
-								format = format.replaceAll("%PLAYER%", player);
-								rec.sendMessage(format);
+								List<ChatElement> joinchats = new ArrayList<ChatElement>();
+								for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+									joinchats.add(new ChatElement(join));
+								}
+								ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+								for (int i = 1; i < joinchats.size(); i++) {
+									joinchats.add(i, elem);
+									i++;
+								}
+								Message.sendJSONMessage(rec, joinchats);
 								e.setCancelled(true);
 							} else {
 								String format = this.getConfig().getString("LocalFormat");
@@ -329,8 +355,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 								format = format.replaceAll("%SUFFIX%", suffix);
 								format = format.replaceAll("%MESSAGE%", message);
 								format = format.replaceAll("&", "§");
-								format = format.replaceAll("%PLAYER%", displayname);
-								rec.sendMessage(format);
+								List<ChatElement> joinchats = new ArrayList<ChatElement>();
+								for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+									joinchats.add(new ChatElement(join));
+								}
+								ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+								for (int i = 1; i < joinchats.size(); i++) {
+									joinchats.add(i, elem);
+									i++;
+								}
+								Message.sendJSONMessage(rec, joinchats);
 								e.setCancelled(true);
 							}
 						}
@@ -361,8 +395,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 						format = format.replaceAll("%SUFFIX%", suffix);
 						format = format.replaceAll("%MESSAGE%", message);
 						format = format.replaceAll("&", "§");
-						format = format.replaceAll("%PLAYER%", splayer);
-						rec.sendMessage(format);
+						List<ChatElement> joinchats = new ArrayList<ChatElement>();
+						for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+							joinchats.add(new ChatElement(join));
+						}
+						ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + eplayer.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+						for (int i = 1; i < joinchats.size(); i++) {
+							joinchats.add(i, elem);
+							i++;
+						}
+						Message.sendJSONMessage(rec, joinchats);
 						e.setCancelled(true);
 					} else {
 						String splayer = ChatColor.RESET + c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) + ChatColor.RESET;
@@ -372,8 +414,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 						format = format.replaceAll("%SUFFIX%", suffix);
 						format = format.replaceAll("%MESSAGE%", message);
 						format = format.replaceAll("&", "§");
-						format = format.replaceAll("%PLAYER%", splayer);
-						rec.sendMessage(format);
+						List<ChatElement> joinchats = new ArrayList<ChatElement>();
+						for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+							joinchats.add(new ChatElement(join));
+						}
+						ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + eplayer.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+						for (int i = 1; i < joinchats.size(); i++) {
+							joinchats.add(i, elem);
+							i++;
+						}
+						Message.sendJSONMessage(rec, joinchats);
 						e.setCancelled(true);
 					}
 					if (c.getConfig().getString("nick." + rec.getUniqueId().toString()) == null) {
@@ -384,8 +434,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 						format = format.replaceAll("%SUFFIX%", suffix);
 						format = format.replaceAll("%MESSAGE%", message);
 						format = format.replaceAll("&", "§");
-						format = format.replaceAll("%PLAYER%", srec);
-						eplayer.sendMessage(format);
+						List<ChatElement> joinchats = new ArrayList<ChatElement>();
+						for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+							joinchats.add(new ChatElement(join));
+						}
+						ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+						for (int i = 1; i < joinchats.size(); i++) {
+							joinchats.add(i, elem);
+							i++;
+						}
+						Message.sendJSONMessage(eplayer, joinchats);
 						e.setCancelled(true);
 					} else {
 						String srec = ChatColor.RESET + c.getConfig().getString("nick." + rec.getUniqueId().toString()) + ChatColor.RESET;
@@ -395,8 +453,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 						format = format.replaceAll("%SUFFIX%", suffix);
 						format = format.replaceAll("%MESSAGE%", message);
 						format = format.replaceAll("&", "§");
-						format = format.replaceAll("%PLAYER%", srec);
-						eplayer.sendMessage(format);
+						List<ChatElement> joinchats = new ArrayList<ChatElement>();
+						for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+							joinchats.add(new ChatElement(join));
+						}
+						ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+						for (int i = 1; i < joinchats.size(); i++) {
+							joinchats.add(i, elem);
+							i++;
+						}
+						Message.sendJSONMessage(eplayer, joinchats);
 						e.setCancelled(true);
 					}
 				}
@@ -412,8 +478,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 									format = format.replaceAll("%SUFFIX%", suffix);
 									format = format.replaceAll("%MESSAGE%", message);
 									format = format.replaceAll("&", "§");
-									format = format.replaceAll("%PLAYER%", player);
-									rec.sendMessage(format);
+									List<ChatElement> joinchats = new ArrayList<ChatElement>();
+									for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+										joinchats.add(new ChatElement(join));
+									}
+									ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+									for (int i = 1; i < joinchats.size(); i++) {
+										joinchats.add(i, elem);
+										i++;
+									}
+									Message.sendJSONMessage(rec, joinchats);
 									e.setCancelled(true);
 								} else {
 									String format = this.getConfig().getString("StaffFormat");
@@ -422,8 +496,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 									format = format.replaceAll("%SUFFIX%", suffix);
 									format = format.replaceAll("%MESSAGE%", message);
 									format = format.replaceAll("&", "§");
-									format = format.replaceAll("%PLAYER%", displayname);
-									rec.sendMessage(format);
+									List<ChatElement> joinchats = new ArrayList<ChatElement>();
+									for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+										joinchats.add(new ChatElement(join));
+									}
+									ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+									for (int i = 1; i < joinchats.size(); i++) {
+										joinchats.add(i, elem);
+										i++;
+									}
+									Message.sendJSONMessage(rec, joinchats);
 									e.setCancelled(true);
 								}
 							}
@@ -452,8 +534,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 								format = format.replaceAll("%SUFFIX%", suffix);
 								format = format.replaceAll("%MESSAGE%", message);
 								format = format.replaceAll("&", "§");
-								format = format.replaceAll("%PLAYER%", player);
-								rec.sendMessage(format);
+								List<ChatElement> joinchats = new ArrayList<ChatElement>();
+								for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+									joinchats.add(new ChatElement(join));
+								}
+								ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+								for (int i = 1; i < joinchats.size(); i++) {
+									joinchats.add(i, elem);
+									i++;
+								}
+								Message.sendJSONMessage(rec, joinchats);
 								e.setCancelled(true);
 							} else {
 								String format = this.getConfig().getString("LocalFormat");
@@ -462,8 +552,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 								format = format.replaceAll("%SUFFIX%", suffix);
 								format = format.replaceAll("%MESSAGE%", message);
 								format = format.replaceAll("&", "§");
-								format = format.replaceAll("%PLAYER%", displayname);
-								rec.sendMessage(format);
+								List<ChatElement> joinchats = new ArrayList<ChatElement>();
+								for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+									joinchats.add(new ChatElement(join));
+								}
+								ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+								for (int i = 1; i < joinchats.size(); i++) {
+									joinchats.add(i, elem);
+									i++;
+								}
+								Message.sendJSONMessage(rec, joinchats);
 								e.setCancelled(true);
 							}
 						}
@@ -494,8 +592,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 						format = format.replaceAll("%SUFFIX%", suffix);
 						format = format.replaceAll("%MESSAGE%", message);
 						format = format.replaceAll("&", "§");
-						format = format.replaceAll("%PLAYER%", splayer);
-						rec.sendMessage(format);
+						List<ChatElement> joinchats = new ArrayList<ChatElement>();
+						for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+							joinchats.add(new ChatElement(join));
+						}
+						ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + eplayer.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+						for (int i = 1; i < joinchats.size(); i++) {
+							joinchats.add(i, elem);
+							i++;
+						}
+						Message.sendJSONMessage(rec, joinchats);
 						e.setCancelled(true);
 					} else {
 						String splayer = ChatColor.RESET + c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) + ChatColor.RESET;
@@ -505,8 +611,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 						format = format.replaceAll("%SUFFIX%", suffix);
 						format = format.replaceAll("%MESSAGE%", message);
 						format = format.replaceAll("&", "§");
-						format = format.replaceAll("%PLAYER%", splayer);
-						rec.sendMessage(format);
+						List<ChatElement> joinchats = new ArrayList<ChatElement>();
+						for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+							joinchats.add(new ChatElement(join));
+						}
+						ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + eplayer.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+						for (int i = 1; i < joinchats.size(); i++) {
+							joinchats.add(i, elem);
+							i++;
+						}
+						Message.sendJSONMessage(rec, joinchats);
 						e.setCancelled(true);
 					}
 					if (c.getConfig().getString("nick." + rec.getUniqueId().toString()) == null) {
@@ -517,8 +631,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 						format = format.replaceAll("%SUFFIX%", suffix);
 						format = format.replaceAll("%MESSAGE%", message);
 						format = format.replaceAll("&", "§");
-						format = format.replaceAll("%PLAYER%", srec);
-						eplayer.sendMessage(format);
+						List<ChatElement> joinchats = new ArrayList<ChatElement>();
+						for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+							joinchats.add(new ChatElement(join));
+						}
+						ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+						for (int i = 1; i < joinchats.size(); i++) {
+							joinchats.add(i, elem);
+							i++;
+						}
+						Message.sendJSONMessage(eplayer, joinchats);
 						e.setCancelled(true);
 					} else {
 						String srec = ChatColor.RESET + c.getConfig().getString("nick." + rec.getUniqueId().toString()) + ChatColor.RESET;
@@ -528,8 +650,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 						format = format.replaceAll("%SUFFIX%", suffix);
 						format = format.replaceAll("%MESSAGE%", message);
 						format = format.replaceAll("&", "§");
-						format = format.replaceAll("%PLAYER%", srec);
-						eplayer.sendMessage(format);
+						List<ChatElement> joinchats = new ArrayList<ChatElement>();
+						for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+							joinchats.add(new ChatElement(join));
+						}
+						ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+						for (int i = 1; i < joinchats.size(); i++) {
+							joinchats.add(i, elem);
+							i++;
+						}
+						Message.sendJSONMessage(eplayer, joinchats);
 						e.setCancelled(true);
 					}
 				}
@@ -545,8 +675,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 									format = format.replaceAll("%SUFFIX%", suffix);
 									format = format.replaceAll("%MESSAGE%", message);
 									format = format.replaceAll("&", "§");
-									format = format.replaceAll("%PLAYER%", player);
-									rec.sendMessage(format);
+									List<ChatElement> joinchats = new ArrayList<ChatElement>();
+									for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+										joinchats.add(new ChatElement(join));
+									}
+									ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+									for (int i = 1; i < joinchats.size(); i++) {
+										joinchats.add(i, elem);
+										i++;
+									}
+									Message.sendJSONMessage(rec, joinchats);
 									e.setCancelled(true);
 								} else {
 									String format = this.getConfig().getString("StaffFormat");
@@ -555,8 +693,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 									format = format.replaceAll("%SUFFIX%", suffix);
 									format = format.replaceAll("%MESSAGE%", message);
 									format = format.replaceAll("&", "§");
-									format = format.replaceAll("%PLAYER%", displayname);
-									rec.sendMessage(format);
+									List<ChatElement> joinchats = new ArrayList<ChatElement>();
+									for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+										joinchats.add(new ChatElement(join));
+									}
+									ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+									for (int i = 1; i < joinchats.size(); i++) {
+										joinchats.add(i, elem);
+										i++;
+									}
+									Message.sendJSONMessage(rec, joinchats);
 									e.setCancelled(true);
 								}
 							}
