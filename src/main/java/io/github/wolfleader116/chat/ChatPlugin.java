@@ -13,8 +13,15 @@ import io.github.wolfleader116.chat.commands.StaffC;
 import io.github.wolfleader116.chat.tabcompleters.ChatTC;
 import io.github.wolfleader116.chat.tabcompleters.MessageTC;
 import io.github.wolfleader116.chat.tabcompleters.NickTC;
+import io.github.wolfleader116.wolfapi.ChatComponent;
+import io.github.wolfleader116.wolfapi.ChatElement;
+import io.github.wolfleader116.wolfapi.ComponentType;
+import io.github.wolfleader116.wolfapi.Message;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
@@ -123,8 +130,16 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 			co.save();
 			String joinmessage = this.getConfig().getString("FirstJoinMessage");
 			joinmessage = joinmessage.replaceAll("&", "§");
-			joinmessage = joinmessage.replaceAll("%PLAYER%", e.getPlayer().getName().toString());
-			Bukkit.getServer().broadcastMessage(joinmessage);
+			List<ChatElement> joinchats = new ArrayList<ChatElement>();
+			for (String join : Arrays.asList(joinmessage.split("%PLAYER%"))) {
+				joinchats.add(new ChatElement(join));
+			}
+			ChatElement elem = new ChatElement(e.getPlayer().getName(), new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+			for (int i = 1; i < joinchats.size(); i++) {
+				joinchats.add(i, elem);
+				i++;
+			}
+			Message.broadcastJSONMessage(joinchats);
 		}
 		Config c = new Config("playerdata", ChatPlugin.plugin);
 		String message = this.getConfig().getString("JoinMessage");
@@ -133,13 +148,29 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 				if (online.hasPermission("chat.silent.exempt")) {
 					if (c.getConfig().getString("nick." + e.getPlayer().getUniqueId().toString()) == null) {
 						message = message.replaceAll("&", "§");
-						message = message.replaceAll("%PLAYER%", e.getPlayer().getName());
-						online.sendMessage(message);
+						List<ChatElement> joinchats = new ArrayList<ChatElement>();
+						for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+							joinchats.add(new ChatElement(join));
+						}
+						ChatElement elem = new ChatElement(e.getPlayer().getName(), new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+						for (int i = 1; i < joinchats.size(); i++) {
+							joinchats.add(i, elem);
+							i++;
+						}
+						Message.sendJSONMessage(online, joinchats);
 					} else {
-						String nick = c.getConfig().getString("nick." + e.getPlayer().getUniqueId().toString()) + ChatColor.RESET;
+						String displayname = c.getConfig().getString("nick." + e.getPlayer().getUniqueId().toString()) + ChatColor.RESET;
 						message = message.replaceAll("&", "§");
-						message = message.replaceAll("%PLAYER%", nick);
-						online.sendMessage(message);
+						List<ChatElement> joinchats = new ArrayList<ChatElement>();
+						for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+							joinchats.add(new ChatElement(join));
+						}
+						ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+						for (int i = 1; i < joinchats.size(); i++) {
+							joinchats.add(i, elem);
+							i++;
+						}
+						Message.sendJSONMessage(online, joinchats);
 					}
 				}
 			}
@@ -147,13 +178,29 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 		} else {
 			if (c.getConfig().getString("nick." + e.getPlayer().getUniqueId().toString()) == null) {
 				message = message.replaceAll("&", "§");
-				message = message.replaceAll("%PLAYER%", e.getPlayer().getName());
-				e.setJoinMessage(message);
+				List<ChatElement> joinchats = new ArrayList<ChatElement>();
+				for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+					joinchats.add(new ChatElement(join));
+				}
+				ChatElement elem = new ChatElement(e.getPlayer().getName(), new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+				for (int i = 1; i < joinchats.size(); i++) {
+					joinchats.add(i, elem);
+					i++;
+				}
+				Message.broadcastJSONMessage(joinchats);
 			} else {
 				String displayname = c.getConfig().getString("nick." + e.getPlayer().getUniqueId().toString()) + ChatColor.RESET;
 				message = message.replaceAll("&", "§");
-				message = message.replaceAll("%PLAYER%", displayname);
-				e.setJoinMessage(message);
+				List<ChatElement> joinchats = new ArrayList<ChatElement>();
+				for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+					joinchats.add(new ChatElement(join));
+				}
+				ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+				for (int i = 1; i < joinchats.size(); i++) {
+					joinchats.add(i, elem);
+					i++;
+				}
+				Message.broadcastJSONMessage(joinchats);
 			}
 		}
 	}
@@ -167,13 +214,29 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 				if (online.hasPermission("chat.silent.exempt")) {
 					if (c.getConfig().getString("nick." + e.getPlayer().getUniqueId().toString()) == null) {
 						message = message.replaceAll("&", "§");
-						message = message.replaceAll("%PLAYER%", e.getPlayer().getName());
-						online.sendMessage(message);
+						List<ChatElement> joinchats = new ArrayList<ChatElement>();
+						for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+							joinchats.add(new ChatElement(join));
+						}
+						ChatElement elem = new ChatElement(e.getPlayer().getName(), new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+						for (int i = 1; i < joinchats.size(); i++) {
+							joinchats.add(i, elem);
+							i++;
+						}
+						Message.sendJSONMessage(online, joinchats);
 					} else {
-						String nick = c.getConfig().getString("nick." + e.getPlayer().getUniqueId().toString()) + ChatColor.RESET;
+						String displayname = c.getConfig().getString("nick." + e.getPlayer().getUniqueId().toString()) + ChatColor.RESET;
 						message = message.replaceAll("&", "§");
-						message = message.replaceAll("%PLAYER%", nick);
-						online.sendMessage(message);
+						List<ChatElement> joinchats = new ArrayList<ChatElement>();
+						for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+							joinchats.add(new ChatElement(join));
+						}
+						ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+						for (int i = 1; i < joinchats.size(); i++) {
+							joinchats.add(i, elem);
+							i++;
+						}
+						Message.sendJSONMessage(online, joinchats);
 					}
 				}
 			}
@@ -181,13 +244,29 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 		} else {
 			if (c.getConfig().getString("nick." + e.getPlayer().getUniqueId().toString()) == null) {
 				message = message.replaceAll("&", "§");
-				message = message.replaceAll("%PLAYER%", e.getPlayer().getName());
-				e.setQuitMessage(message);
+				List<ChatElement> joinchats = new ArrayList<ChatElement>();
+				for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+					joinchats.add(new ChatElement(join));
+				}
+				ChatElement elem = new ChatElement(e.getPlayer().getName(), new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+				for (int i = 1; i < joinchats.size(); i++) {
+					joinchats.add(i, elem);
+					i++;
+				}
+				Message.broadcastJSONMessage(joinchats);
 			} else {
-				String nick = c.getConfig().getString("nick." + e.getPlayer().getUniqueId().toString()) + ChatColor.RESET;
+				String displayname = c.getConfig().getString("nick." + e.getPlayer().getUniqueId().toString()) + ChatColor.RESET;
 				message = message.replaceAll("&", "§");
-				message = message.replaceAll("%PLAYER%", nick);
-				e.setQuitMessage(message);
+				List<ChatElement> joinchats = new ArrayList<ChatElement>();
+				for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+					joinchats.add(new ChatElement(join));
+				}
+				ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+				for (int i = 1; i < joinchats.size(); i++) {
+					joinchats.add(i, elem);
+					i++;
+				}
+				Message.broadcastJSONMessage(joinchats);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 main: io.github.wolfleader116.chat.ChatPlugin
 name: Chat
-version: 3.2
+version: 3.3
 description: Chat plugin
 author: WolfLeader116
 softdepend: [Vault,Settings,PlayerInfo]
