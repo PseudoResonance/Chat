@@ -13,6 +13,7 @@ import io.github.wolfleader116.chat.commands.StaffC;
 import io.github.wolfleader116.chat.tabcompleters.ChatTC;
 import io.github.wolfleader116.chat.tabcompleters.MessageTC;
 import io.github.wolfleader116.chat.tabcompleters.NickTC;
+import io.github.wolfleader116.utils.Utils;
 import io.github.wolfleader116.wolfapi.ChatComponent;
 import io.github.wolfleader116.wolfapi.ChatElement;
 import io.github.wolfleader116.wolfapi.ComponentType;
@@ -271,265 +272,130 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerChat(AsyncPlayerChatEvent e) {
-		Config c = new Config("playerdata", ChatPlugin.plugin);
-		String message = e.getMessage();
-		String player = e.getPlayer().getName() + ChatColor.RESET;
-		Player eplayer = e.getPlayer();
-		String displayname = c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) + ChatColor.RESET;
-		String prefix = chat.getPlayerPrefix(eplayer) + ChatColor.RESET;
-		String suffix = chat.getPlayerSuffix(eplayer);
-		String arrow = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "> " + ChatColor.RESET;
-		String arrows = ChatColor.LIGHT_PURPLE + "> " + ChatColor.RESET;
-		prefix = prefix.replaceAll("&", "§");
-		int range = this.getConfig().getInt("Range");
-		if (eplayer.hasPermission("chat.color")) {
-			message = message.replaceAll("&", "§");
-		}
-		if (this.getConfig().getBoolean("Global")) {
-			if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 0) {
-				if (c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) == null) {
-					String format = this.getConfig().getString("GlobalFormat");
-					format = format.replaceAll("%ARROW%", arrow);
-					format = format.replaceAll("%PREFIX%", prefix);
-					format = format.replaceAll("%SUFFIX%", suffix);
-					format = format.replaceAll("%MESSAGE%", message);
-					format = format.replaceAll("&", "§");
-					List<ChatElement> joinchats = new ArrayList<ChatElement>();
-					for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-						joinchats.add(new ChatElement(join));
-					}
-					ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-					for (int i = 1; i < joinchats.size(); i++) {
-						joinchats.add(i, elem);
-						i++;
-					}
-					Message.broadcastJSONMessage(joinchats);
-					e.setCancelled(true);
-				} else {
-					String format = this.getConfig().getString("GlobalFormat");
-					format = format.replaceAll("%ARROW%", arrow);
-					format = format.replaceAll("%PREFIX%", prefix);
-					format = format.replaceAll("%SUFFIX%", suffix);
-					format = format.replaceAll("%MESSAGE%", message);
-					format = format.replaceAll("&", "§");
-					List<ChatElement> joinchats = new ArrayList<ChatElement>();
-					for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-						joinchats.add(new ChatElement(join));
-					}
-					ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-					for (int i = 1; i < joinchats.size(); i++) {
-						joinchats.add(i, elem);
-						i++;
-					}
-					Message.broadcastJSONMessage(joinchats);
-					e.setCancelled(true);
-				}
-			} else if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 1) {
-				for (Player rec : Bukkit.getOnlinePlayers()) {
-					if (rec.getWorld() == eplayer.getWorld()) {
-						if (rec.getLocation().distance(eplayer.getLocation()) <= range) {
-							if (c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) == null) {
-								String format = this.getConfig().getString("LocalFormat");
-								format = format.replaceAll("%ARROW%", arrow);
-								format = format.replaceAll("%PREFIX%", prefix);
-								format = format.replaceAll("%SUFFIX%", suffix);
-								format = format.replaceAll("%MESSAGE%", message);
-								format = format.replaceAll("&", "§");
-								List<ChatElement> joinchats = new ArrayList<ChatElement>();
-								for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-									joinchats.add(new ChatElement(join));
-								}
-								ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-								for (int i = 1; i < joinchats.size(); i++) {
-									joinchats.add(i, elem);
-									i++;
-								}
-								Message.sendJSONMessage(rec, joinchats);
-								e.setCancelled(true);
-							} else {
-								String format = this.getConfig().getString("LocalFormat");
-								format = format.replaceAll("%ARROW%", arrow);
-								format = format.replaceAll("%PREFIX%", prefix);
-								format = format.replaceAll("%SUFFIX%", suffix);
-								format = format.replaceAll("%MESSAGE%", message);
-								format = format.replaceAll("&", "§");
-								List<ChatElement> joinchats = new ArrayList<ChatElement>();
-								for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-									joinchats.add(new ChatElement(join));
-								}
-								ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-								for (int i = 1; i < joinchats.size(); i++) {
-									joinchats.add(i, elem);
-									i++;
-								}
-								Message.sendJSONMessage(rec, joinchats);
-								e.setCancelled(true);
-							}
-						}
-					}
-				}
-			} else if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 2) {
-				if (c.getConfig().getString("reply." + eplayer.getUniqueId().toString()) == null) {
-					eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "You have nobody to reply to!");
-					e.setCancelled(true);
-				} else if (Bukkit.getPlayer(c.getConfig().getString("reply." + eplayer.getUniqueId().toString())) == null) {
-					eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "That player is offline!");
-					e.setCancelled(true);
-				} else {
-					Player rec = Bukkit.getPlayer(c.getConfig().getString("reply." + eplayer.getUniqueId().toString()));
-					c.getConfig().set("reply." + rec.getUniqueId().toString(), eplayer.getName());
-					c.save();
-					if (Bukkit.getServer().getPluginManager().getPlugin("Settings") != null) {
-						Config settings = new Config("../Settings/playerdata", ChatPlugin.plugin);
-						if (settings.getConfig().getBoolean("afk." + rec.getUniqueId().toString())) {
-							eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "That player is afk so they may not see your message!");
-						}
-					}
-					if (c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) == null) {
-						String splayer = ChatColor.RESET + eplayer.getName() + ChatColor.RESET;
-						String format = this.getConfig().getString("MsgFormatFrom");
-						format = format.replaceAll("%ARROW%", arrows);
-						format = format.replaceAll("%PREFIX%", prefix);
-						format = format.replaceAll("%SUFFIX%", suffix);
-						format = format.replaceAll("%MESSAGE%", message);
-						format = format.replaceAll("&", "§");
-						List<ChatElement> joinchats = new ArrayList<ChatElement>();
-						for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-							joinchats.add(new ChatElement(join));
-						}
-						ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + eplayer.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-						for (int i = 1; i < joinchats.size(); i++) {
-							joinchats.add(i, elem);
-							i++;
-						}
-						Message.sendJSONMessage(rec, joinchats);
-						e.setCancelled(true);
-					} else {
-						String splayer = ChatColor.RESET + c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) + ChatColor.RESET;
-						String format = this.getConfig().getString("MsgFormatFrom");
-						format = format.replaceAll("%ARROW%", arrows);
-						format = format.replaceAll("%PREFIX%", prefix);
-						format = format.replaceAll("%SUFFIX%", suffix);
-						format = format.replaceAll("%MESSAGE%", message);
-						format = format.replaceAll("&", "§");
-						List<ChatElement> joinchats = new ArrayList<ChatElement>();
-						for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-							joinchats.add(new ChatElement(join));
-						}
-						ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + eplayer.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-						for (int i = 1; i < joinchats.size(); i++) {
-							joinchats.add(i, elem);
-							i++;
-						}
-						Message.sendJSONMessage(rec, joinchats);
-						e.setCancelled(true);
-					}
-					if (c.getConfig().getString("nick." + rec.getUniqueId().toString()) == null) {
-						String srec = ChatColor.RESET + rec.getName() + ChatColor.RESET;
-						String format = this.getConfig().getString("MsgFormatTo");
-						format = format.replaceAll("%ARROW%", arrows);
-						format = format.replaceAll("%PREFIX%", prefix);
-						format = format.replaceAll("%SUFFIX%", suffix);
-						format = format.replaceAll("%MESSAGE%", message);
-						format = format.replaceAll("&", "§");
-						List<ChatElement> joinchats = new ArrayList<ChatElement>();
-						for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-							joinchats.add(new ChatElement(join));
-						}
-						ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-						for (int i = 1; i < joinchats.size(); i++) {
-							joinchats.add(i, elem);
-							i++;
-						}
-						Message.sendJSONMessage(eplayer, joinchats);
-						e.setCancelled(true);
-					} else {
-						String srec = ChatColor.RESET + c.getConfig().getString("nick." + rec.getUniqueId().toString()) + ChatColor.RESET;
-						String format = this.getConfig().getString("MsgFormatTo");
-						format = format.replaceAll("%ARROW%", arrows);
-						format = format.replaceAll("%PREFIX%", prefix);
-						format = format.replaceAll("%SUFFIX%", suffix);
-						format = format.replaceAll("%MESSAGE%", message);
-						format = format.replaceAll("&", "§");
-						List<ChatElement> joinchats = new ArrayList<ChatElement>();
-						for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-							joinchats.add(new ChatElement(join));
-						}
-						ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-						for (int i = 1; i < joinchats.size(); i++) {
-							joinchats.add(i, elem);
-							i++;
-						}
-						Message.sendJSONMessage(eplayer, joinchats);
-						e.setCancelled(true);
-					}
-				}
-			} else if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 3) {
-				if (this.getConfig().getBoolean("Staff")) {
-					if (eplayer.hasPermission("chat.staff")) {
-						for (Player rec : Bukkit.getOnlinePlayers()) {
-							if (rec.hasPermission("chat.staff")) {
-								if (c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) == null) {
-									String format = this.getConfig().getString("StaffFormat");
-									format = format.replaceAll("%ARROW%", arrow);
-									format = format.replaceAll("%PREFIX%", prefix);
-									format = format.replaceAll("%SUFFIX%", suffix);
-									format = format.replaceAll("%MESSAGE%", message);
-									format = format.replaceAll("&", "§");
-									List<ChatElement> joinchats = new ArrayList<ChatElement>();
-									for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-										joinchats.add(new ChatElement(join));
-									}
-									ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-									for (int i = 1; i < joinchats.size(); i++) {
-										joinchats.add(i, elem);
-										i++;
-									}
-									Message.sendJSONMessage(rec, joinchats);
-									e.setCancelled(true);
-								} else {
-									String format = this.getConfig().getString("StaffFormat");
-									format = format.replaceAll("%ARROW%", arrow);
-									format = format.replaceAll("%PREFIX%", prefix);
-									format = format.replaceAll("%SUFFIX%", suffix);
-									format = format.replaceAll("%MESSAGE%", message);
-									format = format.replaceAll("&", "§");
-									List<ChatElement> joinchats = new ArrayList<ChatElement>();
-									for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-										joinchats.add(new ChatElement(join));
-									}
-									ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-									for (int i = 1; i < joinchats.size(); i++) {
-										joinchats.add(i, elem);
-										i++;
-									}
-									Message.sendJSONMessage(rec, joinchats);
-									e.setCancelled(true);
-								}
-							}
-						}
-					} else {
-						c.getConfig().set("channel." + eplayer.getUniqueId().toString(), 0);
-						c.save();
-					}
-				} else {
-					c.getConfig().set("channel." + eplayer.getUniqueId().toString(), 0);
-					c.save();
-				}
-			}
-		} else {
-			if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 0) {
-				eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "Your channel cannot be global! Please choose another channel!");
+		if (!(e.isCancelled())) {
+			if ((Bukkit.getPluginManager().getPlugin("Utils") != null) && Utils.isMuted(e.getPlayer().getUniqueId().toString())) {
 				e.setCancelled(true);
-			} else if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 1) {
-				for (Player rec : Bukkit.getOnlinePlayers()) {
-					if (rec.getWorld() == eplayer.getWorld()) {
-						if (rec.getLocation().distance(eplayer.getLocation()) <= range) {
+			} else {
+				Config c = new Config("playerdata", ChatPlugin.plugin);
+				String message = e.getMessage();
+				String player = e.getPlayer().getName() + ChatColor.RESET;
+				Player eplayer = e.getPlayer();
+				String displayname = c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) + ChatColor.RESET;
+				String prefix = chat.getPlayerPrefix(eplayer) + ChatColor.RESET;
+				String suffix = chat.getPlayerSuffix(eplayer);
+				String arrow = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "> " + ChatColor.RESET;
+				String arrows = ChatColor.LIGHT_PURPLE + "> " + ChatColor.RESET;
+				prefix = prefix.replaceAll("&", "§");
+				int range = this.getConfig().getInt("Range");
+				if (eplayer.hasPermission("chat.color")) {
+					message = message.replaceAll("&", "§");
+				}
+				if (this.getConfig().getBoolean("Global")) {
+					if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 0) {
+						if (c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) == null) {
+							String format = this.getConfig().getString("GlobalFormat");
+							format = format.replaceAll("%ARROW%", arrow);
+							format = format.replaceAll("%PREFIX%", prefix);
+							format = format.replaceAll("%SUFFIX%", suffix);
+							format = format.replaceAll("%MESSAGE%", message);
+							format = format.replaceAll("&", "§");
+							List<ChatElement> joinchats = new ArrayList<ChatElement>();
+							for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+								joinchats.add(new ChatElement(join));
+							}
+							ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+							for (int i = 1; i < joinchats.size(); i++) {
+								joinchats.add(i, elem);
+								i++;
+							}
+							Message.broadcastJSONMessage(joinchats);
+							e.setCancelled(true);
+						} else {
+							String format = this.getConfig().getString("GlobalFormat");
+							format = format.replaceAll("%ARROW%", arrow);
+							format = format.replaceAll("%PREFIX%", prefix);
+							format = format.replaceAll("%SUFFIX%", suffix);
+							format = format.replaceAll("%MESSAGE%", message);
+							format = format.replaceAll("&", "§");
+							List<ChatElement> joinchats = new ArrayList<ChatElement>();
+							for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+								joinchats.add(new ChatElement(join));
+							}
+							ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+							for (int i = 1; i < joinchats.size(); i++) {
+								joinchats.add(i, elem);
+								i++;
+							}
+							Message.broadcastJSONMessage(joinchats);
+							e.setCancelled(true);
+						}
+					} else if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 1) {
+						for (Player rec : Bukkit.getOnlinePlayers()) {
+							if (rec.getWorld() == eplayer.getWorld()) {
+								if (rec.getLocation().distance(eplayer.getLocation()) <= range) {
+									if (c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) == null) {
+										String format = this.getConfig().getString("LocalFormat");
+										format = format.replaceAll("%ARROW%", arrow);
+										format = format.replaceAll("%PREFIX%", prefix);
+										format = format.replaceAll("%SUFFIX%", suffix);
+										format = format.replaceAll("%MESSAGE%", message);
+										format = format.replaceAll("&", "§");
+										List<ChatElement> joinchats = new ArrayList<ChatElement>();
+										for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+											joinchats.add(new ChatElement(join));
+										}
+										ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+										for (int i = 1; i < joinchats.size(); i++) {
+											joinchats.add(i, elem);
+											i++;
+										}
+										Message.sendJSONMessage(rec, joinchats);
+										e.setCancelled(true);
+									} else {
+										String format = this.getConfig().getString("LocalFormat");
+										format = format.replaceAll("%ARROW%", arrow);
+										format = format.replaceAll("%PREFIX%", prefix);
+										format = format.replaceAll("%SUFFIX%", suffix);
+										format = format.replaceAll("%MESSAGE%", message);
+										format = format.replaceAll("&", "§");
+										List<ChatElement> joinchats = new ArrayList<ChatElement>();
+										for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+											joinchats.add(new ChatElement(join));
+										}
+										ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+										for (int i = 1; i < joinchats.size(); i++) {
+											joinchats.add(i, elem);
+											i++;
+										}
+										Message.sendJSONMessage(rec, joinchats);
+										e.setCancelled(true);
+									}
+								}
+							}
+						}
+					} else if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 2) {
+						if (c.getConfig().getString("reply." + eplayer.getUniqueId().toString()) == null) {
+							eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "You have nobody to reply to!");
+							e.setCancelled(true);
+						} else if (Bukkit.getPlayer(c.getConfig().getString("reply." + eplayer.getUniqueId().toString())) == null) {
+							eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "That player is offline!");
+							e.setCancelled(true);
+						} else {
+							Player rec = Bukkit.getPlayer(c.getConfig().getString("reply." + eplayer.getUniqueId().toString()));
+							c.getConfig().set("reply." + rec.getUniqueId().toString(), eplayer.getName());
+							c.save();
+							if (Bukkit.getServer().getPluginManager().getPlugin("Settings") != null) {
+								Config settings = new Config("../Settings/playerdata", ChatPlugin.plugin);
+								if (settings.getConfig().getBoolean("afk." + rec.getUniqueId().toString())) {
+									eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "That player is afk so they may not see your message!");
+								}
+							}
 							if (c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) == null) {
-								String format = this.getConfig().getString("LocalFormat");
-								format = format.replaceAll("%ARROW%", arrow);
+								String splayer = ChatColor.RESET + eplayer.getName() + ChatColor.RESET;
+								String format = this.getConfig().getString("MsgFormatFrom");
+								format = format.replaceAll("%ARROW%", arrows);
 								format = format.replaceAll("%PREFIX%", prefix);
 								format = format.replaceAll("%SUFFIX%", suffix);
 								format = format.replaceAll("%MESSAGE%", message);
@@ -538,7 +404,7 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 								for (String join : Arrays.asList(format.split("%PLAYER%"))) {
 									joinchats.add(new ChatElement(join));
 								}
-								ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+								ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + eplayer.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
 								for (int i = 1; i < joinchats.size(); i++) {
 									joinchats.add(i, elem);
 									i++;
@@ -546,8 +412,9 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 								Message.sendJSONMessage(rec, joinchats);
 								e.setCancelled(true);
 							} else {
-								String format = this.getConfig().getString("LocalFormat");
-								format = format.replaceAll("%ARROW%", arrow);
+								String splayer = ChatColor.RESET + c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) + ChatColor.RESET;
+								String format = this.getConfig().getString("MsgFormatFrom");
+								format = format.replaceAll("%ARROW%", arrows);
 								format = format.replaceAll("%PREFIX%", prefix);
 								format = format.replaceAll("%SUFFIX%", suffix);
 								format = format.replaceAll("%MESSAGE%", message);
@@ -556,7 +423,7 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 								for (String join : Arrays.asList(format.split("%PLAYER%"))) {
 									joinchats.add(new ChatElement(join));
 								}
-								ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+								ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + eplayer.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
 								for (int i = 1; i < joinchats.size(); i++) {
 									joinchats.add(i, elem);
 									i++;
@@ -564,156 +431,296 @@ public class ChatPlugin extends JavaPlugin implements Listener {
 								Message.sendJSONMessage(rec, joinchats);
 								e.setCancelled(true);
 							}
+							if (c.getConfig().getString("nick." + rec.getUniqueId().toString()) == null) {
+								String srec = ChatColor.RESET + rec.getName() + ChatColor.RESET;
+								String format = this.getConfig().getString("MsgFormatTo");
+								format = format.replaceAll("%ARROW%", arrows);
+								format = format.replaceAll("%PREFIX%", prefix);
+								format = format.replaceAll("%SUFFIX%", suffix);
+								format = format.replaceAll("%MESSAGE%", message);
+								format = format.replaceAll("&", "§");
+								List<ChatElement> joinchats = new ArrayList<ChatElement>();
+								for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+									joinchats.add(new ChatElement(join));
+								}
+								ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+								for (int i = 1; i < joinchats.size(); i++) {
+									joinchats.add(i, elem);
+									i++;
+								}
+								Message.sendJSONMessage(eplayer, joinchats);
+								e.setCancelled(true);
+							} else {
+								String srec = ChatColor.RESET + c.getConfig().getString("nick." + rec.getUniqueId().toString()) + ChatColor.RESET;
+								String format = this.getConfig().getString("MsgFormatTo");
+								format = format.replaceAll("%ARROW%", arrows);
+								format = format.replaceAll("%PREFIX%", prefix);
+								format = format.replaceAll("%SUFFIX%", suffix);
+								format = format.replaceAll("%MESSAGE%", message);
+								format = format.replaceAll("&", "§");
+								List<ChatElement> joinchats = new ArrayList<ChatElement>();
+								for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+									joinchats.add(new ChatElement(join));
+								}
+								ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+								for (int i = 1; i < joinchats.size(); i++) {
+									joinchats.add(i, elem);
+									i++;
+								}
+								Message.sendJSONMessage(eplayer, joinchats);
+								e.setCancelled(true);
+							}
+						}
+					} else if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 3) {
+						if (this.getConfig().getBoolean("Staff")) {
+							if (eplayer.hasPermission("chat.staff")) {
+								for (Player rec : Bukkit.getOnlinePlayers()) {
+									if (rec.hasPermission("chat.staff")) {
+										if (c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) == null) {
+											String format = this.getConfig().getString("StaffFormat");
+											format = format.replaceAll("%ARROW%", arrow);
+											format = format.replaceAll("%PREFIX%", prefix);
+											format = format.replaceAll("%SUFFIX%", suffix);
+											format = format.replaceAll("%MESSAGE%", message);
+											format = format.replaceAll("&", "§");
+											List<ChatElement> joinchats = new ArrayList<ChatElement>();
+											for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+												joinchats.add(new ChatElement(join));
+											}
+											ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+											for (int i = 1; i < joinchats.size(); i++) {
+												joinchats.add(i, elem);
+												i++;
+											}
+											Message.sendJSONMessage(rec, joinchats);
+											e.setCancelled(true);
+										} else {
+											String format = this.getConfig().getString("StaffFormat");
+											format = format.replaceAll("%ARROW%", arrow);
+											format = format.replaceAll("%PREFIX%", prefix);
+											format = format.replaceAll("%SUFFIX%", suffix);
+											format = format.replaceAll("%MESSAGE%", message);
+											format = format.replaceAll("&", "§");
+											List<ChatElement> joinchats = new ArrayList<ChatElement>();
+											for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+												joinchats.add(new ChatElement(join));
+											}
+											ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+											for (int i = 1; i < joinchats.size(); i++) {
+												joinchats.add(i, elem);
+												i++;
+											}
+											Message.sendJSONMessage(rec, joinchats);
+											e.setCancelled(true);
+										}
+									}
+								}
+							} else {
+								c.getConfig().set("channel." + eplayer.getUniqueId().toString(), 0);
+								c.save();
+							}
+						} else {
+							c.getConfig().set("channel." + eplayer.getUniqueId().toString(), 0);
+							c.save();
 						}
 					}
-				}
-			} else if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 2) {
-				if (c.getConfig().getString("reply." + eplayer.getUniqueId().toString()) == null) {
-					eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "You have nobody to reply to!");
-					e.setCancelled(true);
-				} else if (Bukkit.getPlayer(c.getConfig().getString("reply." + eplayer.getUniqueId().toString())) == null) {
-					eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "That player is offline!");
-					e.setCancelled(true);
 				} else {
-					Player rec = Bukkit.getPlayer(c.getConfig().getString("reply." + eplayer.getUniqueId().toString()));
-					c.getConfig().set("reply." + rec.getUniqueId().toString(), eplayer.getName());
-					c.save();
-					if (Bukkit.getServer().getPluginManager().getPlugin("Settings") != null) {
-						Config settings = new Config("../Settings/playerdata", ChatPlugin.plugin);
-						if (settings.getConfig().getBoolean("afk." + rec.getUniqueId().toString())) {
-							eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "That player is afk so they may not see your message!");
-						}
-					}
-					if (c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) == null) {
-						String splayer = ChatColor.RESET + eplayer.getName() + ChatColor.RESET;
-						String format = this.getConfig().getString("MsgFormatFrom");
-						format = format.replaceAll("%ARROW%", arrows);
-						format = format.replaceAll("%PREFIX%", prefix);
-						format = format.replaceAll("%SUFFIX%", suffix);
-						format = format.replaceAll("%MESSAGE%", message);
-						format = format.replaceAll("&", "§");
-						List<ChatElement> joinchats = new ArrayList<ChatElement>();
-						for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-							joinchats.add(new ChatElement(join));
-						}
-						ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + eplayer.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-						for (int i = 1; i < joinchats.size(); i++) {
-							joinchats.add(i, elem);
-							i++;
-						}
-						Message.sendJSONMessage(rec, joinchats);
+					if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 0) {
+						eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "Your channel cannot be global! Please choose another channel!");
 						e.setCancelled(true);
-					} else {
-						String splayer = ChatColor.RESET + c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) + ChatColor.RESET;
-						String format = this.getConfig().getString("MsgFormatFrom");
-						format = format.replaceAll("%ARROW%", arrows);
-						format = format.replaceAll("%PREFIX%", prefix);
-						format = format.replaceAll("%SUFFIX%", suffix);
-						format = format.replaceAll("%MESSAGE%", message);
-						format = format.replaceAll("&", "§");
-						List<ChatElement> joinchats = new ArrayList<ChatElement>();
-						for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-							joinchats.add(new ChatElement(join));
-						}
-						ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + eplayer.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-						for (int i = 1; i < joinchats.size(); i++) {
-							joinchats.add(i, elem);
-							i++;
-						}
-						Message.sendJSONMessage(rec, joinchats);
-						e.setCancelled(true);
-					}
-					if (c.getConfig().getString("nick." + rec.getUniqueId().toString()) == null) {
-						String srec = ChatColor.RESET + rec.getName() + ChatColor.RESET;
-						String format = this.getConfig().getString("MsgFormatTo");
-						format = format.replaceAll("%ARROW%", arrows);
-						format = format.replaceAll("%PREFIX%", prefix);
-						format = format.replaceAll("%SUFFIX%", suffix);
-						format = format.replaceAll("%MESSAGE%", message);
-						format = format.replaceAll("&", "§");
-						List<ChatElement> joinchats = new ArrayList<ChatElement>();
-						for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-							joinchats.add(new ChatElement(join));
-						}
-						ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-						for (int i = 1; i < joinchats.size(); i++) {
-							joinchats.add(i, elem);
-							i++;
-						}
-						Message.sendJSONMessage(eplayer, joinchats);
-						e.setCancelled(true);
-					} else {
-						String srec = ChatColor.RESET + c.getConfig().getString("nick." + rec.getUniqueId().toString()) + ChatColor.RESET;
-						String format = this.getConfig().getString("MsgFormatTo");
-						format = format.replaceAll("%ARROW%", arrows);
-						format = format.replaceAll("%PREFIX%", prefix);
-						format = format.replaceAll("%SUFFIX%", suffix);
-						format = format.replaceAll("%MESSAGE%", message);
-						format = format.replaceAll("&", "§");
-						List<ChatElement> joinchats = new ArrayList<ChatElement>();
-						for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-							joinchats.add(new ChatElement(join));
-						}
-						ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-						for (int i = 1; i < joinchats.size(); i++) {
-							joinchats.add(i, elem);
-							i++;
-						}
-						Message.sendJSONMessage(eplayer, joinchats);
-						e.setCancelled(true);
-					}
-				}
-			} else if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 3) {
-				if (this.getConfig().getBoolean("Staff")) {
-					if (eplayer.hasPermission("chat.staff")) {
+					} else if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 1) {
 						for (Player rec : Bukkit.getOnlinePlayers()) {
-							if (rec.hasPermission("chat.staff")) {
-								if (c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) == null) {
-									String format = this.getConfig().getString("StaffFormat");
-									format = format.replaceAll("%ARROW%", arrow);
-									format = format.replaceAll("%PREFIX%", prefix);
-									format = format.replaceAll("%SUFFIX%", suffix);
-									format = format.replaceAll("%MESSAGE%", message);
-									format = format.replaceAll("&", "§");
-									List<ChatElement> joinchats = new ArrayList<ChatElement>();
-									for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-										joinchats.add(new ChatElement(join));
+							if (rec.getWorld() == eplayer.getWorld()) {
+								if (rec.getLocation().distance(eplayer.getLocation()) <= range) {
+									if (c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) == null) {
+										String format = this.getConfig().getString("LocalFormat");
+										format = format.replaceAll("%ARROW%", arrow);
+										format = format.replaceAll("%PREFIX%", prefix);
+										format = format.replaceAll("%SUFFIX%", suffix);
+										format = format.replaceAll("%MESSAGE%", message);
+										format = format.replaceAll("&", "§");
+										List<ChatElement> joinchats = new ArrayList<ChatElement>();
+										for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+											joinchats.add(new ChatElement(join));
+										}
+										ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+										for (int i = 1; i < joinchats.size(); i++) {
+											joinchats.add(i, elem);
+											i++;
+										}
+										Message.sendJSONMessage(rec, joinchats);
+										e.setCancelled(true);
+									} else {
+										String format = this.getConfig().getString("LocalFormat");
+										format = format.replaceAll("%ARROW%", arrow);
+										format = format.replaceAll("%PREFIX%", prefix);
+										format = format.replaceAll("%SUFFIX%", suffix);
+										format = format.replaceAll("%MESSAGE%", message);
+										format = format.replaceAll("&", "§");
+										List<ChatElement> joinchats = new ArrayList<ChatElement>();
+										for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+											joinchats.add(new ChatElement(join));
+										}
+										ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+										for (int i = 1; i < joinchats.size(); i++) {
+											joinchats.add(i, elem);
+											i++;
+										}
+										Message.sendJSONMessage(rec, joinchats);
+										e.setCancelled(true);
 									}
-									ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-									for (int i = 1; i < joinchats.size(); i++) {
-										joinchats.add(i, elem);
-										i++;
-									}
-									Message.sendJSONMessage(rec, joinchats);
-									e.setCancelled(true);
-								} else {
-									String format = this.getConfig().getString("StaffFormat");
-									format = format.replaceAll("%ARROW%", arrow);
-									format = format.replaceAll("%PREFIX%", prefix);
-									format = format.replaceAll("%SUFFIX%", suffix);
-									format = format.replaceAll("%MESSAGE%", message);
-									format = format.replaceAll("&", "§");
-									List<ChatElement> joinchats = new ArrayList<ChatElement>();
-									for (String join : Arrays.asList(format.split("%PLAYER%"))) {
-										joinchats.add(new ChatElement(join));
-									}
-									ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
-									for (int i = 1; i < joinchats.size(); i++) {
-										joinchats.add(i, elem);
-										i++;
-									}
-									Message.sendJSONMessage(rec, joinchats);
-									e.setCancelled(true);
 								}
 							}
 						}
-					} else {
-						c.getConfig().set("channel." + eplayer.getUniqueId().toString(), 0);
-						c.save();
+					} else if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 2) {
+						if (c.getConfig().getString("reply." + eplayer.getUniqueId().toString()) == null) {
+							eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "You have nobody to reply to!");
+							e.setCancelled(true);
+						} else if (Bukkit.getPlayer(c.getConfig().getString("reply." + eplayer.getUniqueId().toString())) == null) {
+							eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "That player is offline!");
+							e.setCancelled(true);
+						} else {
+							Player rec = Bukkit.getPlayer(c.getConfig().getString("reply." + eplayer.getUniqueId().toString()));
+							c.getConfig().set("reply." + rec.getUniqueId().toString(), eplayer.getName());
+							c.save();
+							if (Bukkit.getServer().getPluginManager().getPlugin("Settings") != null) {
+								Config settings = new Config("../Settings/playerdata", ChatPlugin.plugin);
+								if (settings.getConfig().getBoolean("afk." + rec.getUniqueId().toString())) {
+									eplayer.sendMessage(ChatColor.BLUE + "Chat> " + ChatColor.GREEN + "That player is afk so they may not see your message!");
+								}
+							}
+							if (c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) == null) {
+								String splayer = ChatColor.RESET + eplayer.getName() + ChatColor.RESET;
+								String format = this.getConfig().getString("MsgFormatFrom");
+								format = format.replaceAll("%ARROW%", arrows);
+								format = format.replaceAll("%PREFIX%", prefix);
+								format = format.replaceAll("%SUFFIX%", suffix);
+								format = format.replaceAll("%MESSAGE%", message);
+								format = format.replaceAll("&", "§");
+								List<ChatElement> joinchats = new ArrayList<ChatElement>();
+								for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+									joinchats.add(new ChatElement(join));
+								}
+								ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + eplayer.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+								for (int i = 1; i < joinchats.size(); i++) {
+									joinchats.add(i, elem);
+									i++;
+								}
+								Message.sendJSONMessage(rec, joinchats);
+								e.setCancelled(true);
+							} else {
+								String splayer = ChatColor.RESET + c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) + ChatColor.RESET;
+								String format = this.getConfig().getString("MsgFormatFrom");
+								format = format.replaceAll("%ARROW%", arrows);
+								format = format.replaceAll("%PREFIX%", prefix);
+								format = format.replaceAll("%SUFFIX%", suffix);
+								format = format.replaceAll("%MESSAGE%", message);
+								format = format.replaceAll("&", "§");
+								List<ChatElement> joinchats = new ArrayList<ChatElement>();
+								for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+									joinchats.add(new ChatElement(join));
+								}
+								ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + eplayer.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+								for (int i = 1; i < joinchats.size(); i++) {
+									joinchats.add(i, elem);
+									i++;
+								}
+								Message.sendJSONMessage(rec, joinchats);
+								e.setCancelled(true);
+							}
+							if (c.getConfig().getString("nick." + rec.getUniqueId().toString()) == null) {
+								String srec = ChatColor.RESET + rec.getName() + ChatColor.RESET;
+								String format = this.getConfig().getString("MsgFormatTo");
+								format = format.replaceAll("%ARROW%", arrows);
+								format = format.replaceAll("%PREFIX%", prefix);
+								format = format.replaceAll("%SUFFIX%", suffix);
+								format = format.replaceAll("%MESSAGE%", message);
+								format = format.replaceAll("&", "§");
+								List<ChatElement> joinchats = new ArrayList<ChatElement>();
+								for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+									joinchats.add(new ChatElement(join));
+								}
+								ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+								for (int i = 1; i < joinchats.size(); i++) {
+									joinchats.add(i, elem);
+									i++;
+								}
+								Message.sendJSONMessage(eplayer, joinchats);
+								e.setCancelled(true);
+							} else {
+								String srec = ChatColor.RESET + c.getConfig().getString("nick." + rec.getUniqueId().toString()) + ChatColor.RESET;
+								String format = this.getConfig().getString("MsgFormatTo");
+								format = format.replaceAll("%ARROW%", arrows);
+								format = format.replaceAll("%PREFIX%", prefix);
+								format = format.replaceAll("%SUFFIX%", suffix);
+								format = format.replaceAll("%MESSAGE%", message);
+								format = format.replaceAll("&", "§");
+								List<ChatElement> joinchats = new ArrayList<ChatElement>();
+								for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+									joinchats.add(new ChatElement(join));
+								}
+								ChatElement elem = new ChatElement(srec, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + rec.getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+								for (int i = 1; i < joinchats.size(); i++) {
+									joinchats.add(i, elem);
+									i++;
+								}
+								Message.sendJSONMessage(eplayer, joinchats);
+								e.setCancelled(true);
+							}
+						}
+					} else if (c.getConfig().getInt("channel." + eplayer.getUniqueId().toString()) == 3) {
+						if (this.getConfig().getBoolean("Staff")) {
+							if (eplayer.hasPermission("chat.staff")) {
+								for (Player rec : Bukkit.getOnlinePlayers()) {
+									if (rec.hasPermission("chat.staff")) {
+										if (c.getConfig().getString("nick." + eplayer.getUniqueId().toString()) == null) {
+											String format = this.getConfig().getString("StaffFormat");
+											format = format.replaceAll("%ARROW%", arrow);
+											format = format.replaceAll("%PREFIX%", prefix);
+											format = format.replaceAll("%SUFFIX%", suffix);
+											format = format.replaceAll("%MESSAGE%", message);
+											format = format.replaceAll("&", "§");
+											List<ChatElement> joinchats = new ArrayList<ChatElement>();
+											for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+												joinchats.add(new ChatElement(join));
+											}
+											ChatElement elem = new ChatElement(player, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+											for (int i = 1; i < joinchats.size(); i++) {
+												joinchats.add(i, elem);
+												i++;
+											}
+											Message.sendJSONMessage(rec, joinchats);
+											e.setCancelled(true);
+										} else {
+											String format = this.getConfig().getString("StaffFormat");
+											format = format.replaceAll("%ARROW%", arrow);
+											format = format.replaceAll("%PREFIX%", prefix);
+											format = format.replaceAll("%SUFFIX%", suffix);
+											format = format.replaceAll("%MESSAGE%", message);
+											format = format.replaceAll("&", "§");
+											List<ChatElement> joinchats = new ArrayList<ChatElement>();
+											for (String join : Arrays.asList(format.split("%PLAYER%"))) {
+												joinchats.add(new ChatElement(join));
+											}
+											ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + e.getPlayer().getName()), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
+											for (int i = 1; i < joinchats.size(); i++) {
+												joinchats.add(i, elem);
+												i++;
+											}
+											Message.sendJSONMessage(rec, joinchats);
+											e.setCancelled(true);
+										}
+									}
+								}
+							} else {
+								c.getConfig().set("channel." + eplayer.getUniqueId().toString(), 0);
+								c.save();
+							}
+						} else {
+							c.getConfig().set("channel." + eplayer.getUniqueId().toString(), 0);
+							c.save();
+						}
 					}
-				} else {
-					c.getConfig().set("channel." + eplayer.getUniqueId().toString(), 0);
-					c.save();
 				}
 			}
 		}

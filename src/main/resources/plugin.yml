@@ -1,9 +1,9 @@
 main: io.github.wolfleader116.chat.ChatPlugin
 name: Chat
-version: 3.3.3
+version: 3.3.4
 description: Chat plugin
 author: WolfLeader116
-softdepend: [Vault,Settings,PlayerInfo]
+softdepend: [Vault,Settings,PlayerInfo,Utils]
 commands:
   msg:
     description: Private message a player.
