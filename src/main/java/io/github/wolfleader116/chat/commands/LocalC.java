@@ -62,7 +62,7 @@ public class LocalC implements CommandExecutor {
 										format = format.replaceAll("%MESSAGE%", message);
 										format = format.replaceAll("&", "§");
 										List<ChatElement> joinchats = new ArrayList<ChatElement>();
-										for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+										for (String join : Arrays.asList(format.split("%PLAYER%"))) {
 											joinchats.add(new ChatElement(join));
 										}
 										ChatElement elem = new ChatElement(splayer, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + splayer), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
@@ -79,7 +79,7 @@ public class LocalC implements CommandExecutor {
 										format = format.replaceAll("%MESSAGE%", message);
 										format = format.replaceAll("&", "§");
 										List<ChatElement> joinchats = new ArrayList<ChatElement>();
-										for (String join : Arrays.asList(message.split("%PLAYER%"))) {
+										for (String join : Arrays.asList(format.split("%PLAYER%"))) {
 											joinchats.add(new ChatElement(join));
 										}
 										ChatElement elem = new ChatElement(displayname, new ChatComponent(ComponentType.RUN_COMMAND, "/p " + splayer), new ChatComponent(ComponentType.SHOW_TEXT, ChatColor.GREEN + "Click to Learn More!"));
